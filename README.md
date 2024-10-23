@@ -32,7 +32,7 @@ docker run -w /data \
     dbus-run-session /scripts/package --type wgt --sign YourSecurityProfile --output '.' -- './.buildResult'
 ```
 
-Output example:
+## Output example:
 
 ```sh
 GNOME_KEYRING_CONTROL=/home/developer/.cache/keyring-8FT3V2
