@@ -1,0 +1,25 @@
+#!/bin/bash
+
+set -e  # Exit immediately if a command exits with a non-zero status
+
+echo "" | gnome-keyring-daemon --unlock
+
+# Add security profiles using the .p12 files directly
+tizen security-profiles add -n "$SIGN_PROFILE" \
+    -a "$SIGN_AUTHOR_CERT" -p "$SIGN_AUTHOR_CERT_PASS" \
+    -d "$SIGN_DISTRIBUTOR_CERT" -dp "$SIGN_DISTRIBUTOR_CERT_PASS"
+
+tizen cli-config "profiles.path=/home/developer/tizen-studio-data/profile/profiles.xml"
+
+if [ $? -ne 0 ]; then
+    echo "Failed to add security profile"
+    exit 1
+fi
+
+tizen package "$@"
+
+if [ $? -ne 0 ]; then
+    echo "Failed to package the application"
+    cat ~/tizen-studio-data/cli/logs/cli.log
+    exit 1
+fi
